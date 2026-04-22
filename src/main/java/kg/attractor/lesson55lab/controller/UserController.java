@@ -49,9 +49,9 @@ public class UserController {
         PageRequest pageable = PageRequest.of(page, 5);
 
         if ("EMPLOYER".equals(user.getAccountType().name())) {
-            model.addAttribute("vacanciesPage", vacancyDao.findAll(pageable));
+            model.addAttribute("vacanciesPage", vacancyDao.findByAuthor(user, pageable));
         } else {
-            model.addAttribute("resumesPage", resumeDao.findAll(pageable));
+            model.addAttribute("resumesPage", resumeDao.findByAuthor(user, pageable));
         }
 
         return "profile";
