@@ -6,6 +6,9 @@
                 <div class="card shadow-sm p-4">
                     <h3 class="mb-4">Создание резюме</h3>
                     <form action="/resumes/create" method="post">
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
+                        </#if>
                         <div class="mb-3">
                             <label class="form-label">Желаемая должность</label>
                             <input type="text" name="title" class="form-control" placeholder="Например: Младший разработчик" required>
