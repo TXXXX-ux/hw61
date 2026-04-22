@@ -1,5 +1,8 @@
 package kg.attractor.lesson55lab.controller;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import kg.attractor.lesson55lab.dao.UserDao;
 import kg.attractor.lesson55lab.dto.UserRegistrationDto;
 import kg.attractor.lesson55lab.model.User;
@@ -8,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,16 +38,41 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(UserRegistrationDto userDto) {
+    public String registerUser(@Valid UserRegistrationDto userDto,
+                               BindingResult bindingResult,
+                               HttpServletRequest request,
+                               Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("types", AccountType.values());
+            return "register";
+        }
+
+        if (userDao.findByEmail(userDto.getEmail()) != null) {
+            model.addAttribute("types", AccountType.values());
+            model.addAttribute("errorMessage", "Пользователь с таким email уже существует!");
+            return "register";
+        }
+
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setName("Новый пользователь");
-
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAccountType(AccountType.valueOf(userDto.getAccountType()));
+        userDao.saveAndFlush(user);
 
-        userDao.save(user);
-        return "redirect:/auth/login";
+        try {
+            request.login(userDto.getEmail(), userDto.getPassword());
+        } catch (ServletException e) {
+            e.printStackTrace();
+            return "redirect:/auth/login";
+        }
+
+        if ("EMPLOYER".equals(userDto.getAccountType())) {
+            return "redirect:/resumes";
+        } else {
+            return "redirect:/vacancies";
+        }
     }
 
     @GetMapping("/profile")
