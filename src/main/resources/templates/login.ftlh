@@ -16,6 +16,9 @@
                                 <div class="alert alert-danger">Неверный email или пароль</div>
                             </#if>
                             <form action="/login" method="post">
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
+                                </#if>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Email (Логин)</label>
                                         <input type="text" class="form-control" id="username" name="email" required>
