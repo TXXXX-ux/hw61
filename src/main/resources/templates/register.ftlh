@@ -14,6 +14,12 @@
                         <div class="card-body p-5">
                             <h2 class="text-center mb-4">Регистрация</h2>
                             <form action="/auth/register" method="post">
+                                <#if errorMessage??>
+                                    <div class="alert alert-danger">${errorMessage}</div>
+                                </#if>
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
+                                </#if>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email" placeholder="example@mail.com" required>
