@@ -24,6 +24,9 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="/profile">Мой профиль</a>
                 <form action="/logout" method="post" class="ms-lg-3">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
+                    </#if>
                     <button type="submit" class="btn btn-outline-danger btn-sm">Выйти</button>
                 </form>
             </div>
