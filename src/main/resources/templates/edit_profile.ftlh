@@ -15,6 +15,9 @@
                         </div>
                         <div class="card-body">
                             <form action="/profile/edit" method="post" enctype="multipart/form-data">
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
+                                </#if>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Имя / Название компании</label>
                                     <input type="text"
