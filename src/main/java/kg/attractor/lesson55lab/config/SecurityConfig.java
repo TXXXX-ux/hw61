@@ -15,9 +15,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/login", "/register", "/vacancies", "/resumes", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/auth/**", "/login", "/register", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -25,7 +24,15 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/profile", true)
+                        .successHandler((request, response, authentication) -> {
+                            boolean isEmployer = authentication.getAuthorities().stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_EMPLOYER") || a.getAuthority().equals("EMPLOYER"));
+                            if (isEmployer) {
+                                response.sendRedirect("/resumes");
+                            } else {
+                                response.sendRedirect("/vacancies");
+                            }
+                        })
                         .failureUrl("/auth/login?error=true")
                         .permitAll()
                 )
