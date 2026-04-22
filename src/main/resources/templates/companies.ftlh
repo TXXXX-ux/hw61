@@ -10,7 +10,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">${company.name}</h5>
                                 <p class="card-text text-muted">Email: ${company.email}</p>
-                                <a href="#" class="btn btn-sm btn-outline-primary">Посмотреть вакансии компании</a>
+                                <a href="/companies/${company.id}" class="btn btn-sm btn-outline-primary">Посмотреть вакансии компании</a>
                             </div>
                         </div>
                     </div>
