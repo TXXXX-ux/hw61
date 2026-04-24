@@ -7,6 +7,7 @@
             <title>Job Portal</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
             <style>
                 .profile-header { background: linear-gradient(45deg, #007bff, #0056b3); color: white; padding: 20px; border-radius: 10px 10px 0 0; }
                 .admin-section { border-left: 4px solid #dc3545; padding-left: 15px; }
