@@ -17,19 +17,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Статика и авторизация - доступны всем
                         .requestMatchers("/", "/auth/**", "/login", "/register").permitAll()
-
-                        // 2. Вакансии: просмотр всем, создание/правка/удаление - только работодателю
                         .requestMatchers(HttpMethod.GET, "/vacancies", "/vacancies/{id}").permitAll()
                         .requestMatchers("/vacancies/create", "/vacancies/*/edit", "/vacancies/*/delete").hasAuthority("ROLE_EMPLOYER")
-
-                        // 3. Резюме: список видит работодатель, само резюме - все, CRUD - соискатель
                         .requestMatchers(HttpMethod.GET, "/resumes").hasAuthority("ROLE_EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/resumes/{id}").permitAll()
                         .requestMatchers("/resumes/create", "/resumes/*/edit", "/resumes/*/delete").hasAuthority("ROLE_APPLICANT")
-
-                        // 4. Всё остальное только для авторизованных
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -37,7 +30,6 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        // ИСПРАВЛЕНО: Теперь перекидывает по правильному адресу!
                         .defaultSuccessUrl("/auth/profile", true)
                         .failureUrl("/auth/login?error=true")
                         .permitAll()
