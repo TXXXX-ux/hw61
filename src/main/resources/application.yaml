@@ -4,30 +4,49 @@ server:
 spring:
   application:
     name: lesson60lab
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 8803330605
     driver-class-name: org.postgresql.Driver
+
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: dadep8572@gmail.com
+    password: 8803330605XXXXXX
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
   liquibase:
     enabled: false
+
   freemarker:
     template-loader-path: classpath:/templates/
     suffix: .ftlh
+
   mvc:
     static-path-pattern: /static/**
+
   web:
     resources:
       static-locations:
         - classpath:/static/
         - file:src/main/resources/static/
+
   servlet:
     multipart:
       max-file-size: 10MB
