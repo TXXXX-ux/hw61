@@ -1,7 +1,7 @@
 package kg.attractor.lesson55lab.service;
 
 import kg.attractor.lesson55lab.dao.ResumeDao;
-import kg.attractor.lesson55lab.dao.UserDao; // Добавь этот импорт
+import kg.attractor.lesson55lab.dao.UserDao;
 import kg.attractor.lesson55lab.dto.ResumeCreateDto;
 import kg.attractor.lesson55lab.dto.ResumeDto;
 import kg.attractor.lesson55lab.model.Resume;
@@ -18,16 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class ResumeService {
 
     private final ResumeDao resumeDao;
-    private final UserDao userDao; // Внедряем UserDao
+    private final UserDao userDao;
 
-    // Исправленный метод создания с привязкой автора
     @Transactional
     public void createResume(ResumeCreateDto dto, String email) {
         User author = userDao.findByEmail(email);
         Resume resume = new Resume();
         resume.setTitle(dto.getTitle());
         resume.setDescription(dto.getDescription());
-        resume.setAuthor(author); // ОБЯЗАТЕЛЬНО: Привязываем тебя как автора!
+        resume.setAuthor(author);
         resumeDao.save(resume);
     }
 

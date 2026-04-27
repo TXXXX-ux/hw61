@@ -37,16 +37,15 @@ public class VacancyService {
     }
 
     @Transactional
-    public void createVacancy(VacancyCreateDto dto, String email) { // Исправлен тип DTO и добавлен email
-        User author = userDao.findByEmail(email); // Находим автора по email
-
+    public void createVacancy(VacancyCreateDto dto, String email) {
+        User author = userDao.findByEmail(email);
         Vacancy vacancy = new Vacancy();
         vacancy.setTitle(dto.getTitle());
         vacancy.setDescription(dto.getDescription());
         vacancy.setSalary(dto.getSalary());
         vacancy.setPublishedDate(java.time.LocalDate.now());
         vacancy.setResponsesCount(0);
-        vacancy.setAuthor(author); // КРИТИЧЕСКИ ВАЖНО: Привязываем автора!
+        vacancy.setAuthor(author);
 
         vacancyDao.save(vacancy);
     }
@@ -65,14 +64,9 @@ public class VacancyService {
     public void updateVacancy(Long id, VacancyCreateDto dto) {
         Vacancy vacancy = vacancyDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Вакансия не найдена"));
-
-        // Обновляем поля из DTO
         vacancy.setTitle(dto.getTitle());
         vacancy.setDescription(dto.getDescription());
         vacancy.setSalary(dto.getSalary());
-
-        // В Spring Data JPA при @Transactional вызывать save() не обязательно,
-        // но для наглядности оставим
         vacancyDao.save(vacancy);
     }
 
@@ -95,6 +89,7 @@ public class VacancyService {
                 .publishedDate(vacancy.getPublishedDate())
                 .responsesCount(vacancy.getResponsesCount())
                 .authorName(vacancy.getAuthor() != null ? vacancy.getAuthor().getName() : "Неизвестно")
+                .authorEmail(vacancy.getAuthor().getEmail())
                 .categoryName(vacancy.getCategory() != null ? vacancy.getCategory().getName() : "Без категории")
                 .build();
     }
