@@ -75,8 +75,6 @@ public class AuthController {
             e.printStackTrace();
             return "redirect:/auth/login";
         }
-
-        // ИСПРАВЛЕНО: После регистрации отправляем в личный кабинет
         return "redirect:/auth/profile";
     }
 

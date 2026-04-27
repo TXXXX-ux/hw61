@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class JobController {
 
     private final UserDao userDao;
-    private final VacancyService vacancyService; // Добавляем сервис вакансий!
+    private final VacancyService vacancyService;
 
     @GetMapping("/companies")
     public String companiesPage(@RequestParam(defaultValue = "0") int page, Model model) {
@@ -27,14 +27,12 @@ public class JobController {
         return "companies";
     }
 
-    // НОВЫЙ МЕТОД: Открывает профиль компании и все её вакансии
     @GetMapping("/companies/{id}")
     public String companyInfo(@PathVariable Long id, @RequestParam(defaultValue = "0") int page, Model model) {
         User company = userDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Компания не найдена"));
 
         model.addAttribute("company", company);
-        // Получаем только вакансии этой конкретной компании
         model.addAttribute("vacanciesPage", vacancyService.getVacanciesByAuthor(company, page));
 
         return "company_info";
