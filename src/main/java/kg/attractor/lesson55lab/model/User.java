@@ -19,6 +19,9 @@ public class User {
     private String name;
     private String about;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
