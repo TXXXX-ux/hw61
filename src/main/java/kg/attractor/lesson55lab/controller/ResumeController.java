@@ -39,14 +39,11 @@ public class ResumeController {
     @PostMapping("/create")
     public String saveResume(@Valid @ModelAttribute("resumeDto") ResumeCreateDto dto,
                              BindingResult bindingResult,
-                             Principal principal) { // Добавляем Principal
+                             Principal principal) {
         if (bindingResult.hasErrors()) {
             return "create_resume";
         }
-        // Передаем email текущего пользователя
         resumeService.createResume(dto, principal.getName());
-
-        // ИСПРАВЛЕНО: Редирект в профиль, чтобы не поймать 403 ошибку
         return "redirect:/auth/profile";
     }
 
@@ -75,7 +72,6 @@ public class ResumeController {
     @PostMapping("/{id}/delete")
     public String deleteResume(@PathVariable Long id) {
         resumeService.deleteResume(id);
-        // ИСПРАВЛЕНИЕ 2: После удаления тоже кидаем в профиль
         return "redirect:/auth/profile";
     }
 }

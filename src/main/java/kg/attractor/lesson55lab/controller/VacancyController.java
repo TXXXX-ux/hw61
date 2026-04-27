@@ -43,20 +43,20 @@ public class VacancyController {
     @PostMapping("/create")
     public String saveVacancy(@Valid @ModelAttribute("vacancyDto") VacancyCreateDto dto,
                               BindingResult bindingResult,
-                              Principal principal) { // Добавлен Principal для получения автора
+                              Principal principal) {
         if (bindingResult.hasErrors()) {
             return "create_vacancy";
         }
-
-        // Передаем DTO и email текущего пользователя
         vacancyService.createVacancy(dto, principal.getName());
-
-        // После создания вакансии работодателя логичнее вернуть в профиль, чтобы он её увидел
         return "redirect:/auth/profile";
     }
 
     @GetMapping("/{id}/edit")
-    public String editVacancyPage(@PathVariable Long id, Model model) {
+    public String editVacancyPage(@PathVariable Long id, Principal principal, Model model) {
+        var vacancy = vacancyService.getVacancyById(id);
+        if (!vacancy.getAuthorEmail().equals(principal.getName())) {
+            return "redirect:/vacancies?error=access_denied";
+        }
         model.addAttribute("vacancyDto", vacancyService.getVacancyForEdit(id));
         model.addAttribute("vacancyId", id);
         return "edit_vacancy";
@@ -66,7 +66,13 @@ public class VacancyController {
     public String updateVacancy(@PathVariable Long id,
                                 @Valid @ModelAttribute("vacancyDto") VacancyCreateDto dto,
                                 BindingResult bindingResult,
+                                Principal principal,
                                 Model model) {
+        var vacancy = vacancyService.getVacancyById(id);
+        if (!vacancy.getAuthorEmail().equals(principal.getName())) {
+            return "redirect:/vacancies?error=access_denied";
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("vacancyId", id);
             return "edit_vacancy";
@@ -76,8 +82,11 @@ public class VacancyController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteVacancy(@PathVariable Long id) {
-        vacancyService.deleteVacancy(id);
+    public String deleteVacancy(@PathVariable Long id, Principal principal) {
+        var vacancy = vacancyService.getVacancyById(id);
+        if (vacancy.getAuthorEmail().equals(principal.getName())) {
+            vacancyService.deleteVacancy(id);
+        }
         return "redirect:/vacancies";
     }
 }
