@@ -21,7 +21,31 @@
                             <p class="fw-bold text-success">${vacancy.salary!0} сом</p>
                         </div>
                         <div class="card-footer bg-transparent border-top-0 pb-3">
-                            <a href="/vacancies/${vacancy.id}" class="btn btn-primary w-100">Откликнуться</a>
+
+                            <#-- УМНЫЙ БЛОК КНОПОК -->
+                            <#if Session?? && Session.SPRING_SECURITY_CONTEXT??>
+                                <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
+
+                            <#-- Если это РАБОТОДАТЕЛЬ -->
+                                <#if auth.authorities?seq_contains("ROLE_EMPLOYER")>
+                                    <a href="/vacancies/${vacancy.id}" class="btn btn-outline-primary w-100">
+                                        Управление
+                                    </a>
+
+                                <#-- Если это СОИСКАТЕЛЬ -->
+                                <#elseif auth.authorities?seq_contains("ROLE_APPLICANT")>
+                                    <a href="/vacancies/${vacancy.id}" class="btn btn-primary w-100">
+                                        Откликнуться
+                                    </a>
+                                </#if>
+
+                            <#-- Если ГОСТЬ (не авторизован) -->
+                            <#else>
+                                <a href="/vacancies/${vacancy.id}" class="btn btn-primary w-100">
+                                    Подробнее
+                                </a>
+                            </#if>
+
                         </div>
                     </div>
                 </div>

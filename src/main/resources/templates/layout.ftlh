@@ -13,6 +13,8 @@
                 .admin-section { border-left: 4px solid #dc3545; padding-left: 15px; }
                 .user-section { border-left: 4px solid #17a2b8; padding-left: 15px; }
                 .bg-light { background-color: #f8f9fa!important; }
+                /* Добавь это в блок <style> в файле layout.ftlh */
+                html { scroll-behavior: smooth }
             </style>
         </head>
         <body class="bg-light">

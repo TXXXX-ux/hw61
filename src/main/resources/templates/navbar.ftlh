@@ -10,19 +10,17 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
 
-                <#if user??>
-                    <#if user.accountType == "EMPLOYER">
-                        <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
-                    <#else>
-                        <li class="nav-item"><a class="nav-link" href="/companies">Компании</a></li>
+                <#-- Проверяем роль через сессию Spring Security -->
+                <#if Session?? && Session.SPRING_SECURITY_CONTEXT??>
+                    <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
+                    <#if auth.authorities?seq_contains("ROLE_EMPLOYER")>
+                        <li class="nav-item"><a class="nav-link" href="/resumes">База резюме</a></li>
                     </#if>
-                <#else>
-                    <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/companies">Компании</a></li>
                 </#if>
+                <li class="nav-item"><a class="nav-link" href="/companies">Компании</a></li>
             </ul>
             <div class="navbar-nav">
-                <a class="nav-link" href="/profile">Мой профиль</a>
+                <a class="nav-link" href="/auth/profile">Мой профиль</a>
                 <form action="/logout" method="post" class="ms-lg-3">
                     <#if _csrf??>
                         <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>

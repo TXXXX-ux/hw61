@@ -1,14 +1,16 @@
 <#import "layout.ftlh" as main>
 <@main.layout>
     <div class="text-center py-5">
-        <h1 class="display-1 fw-bold text-danger">${status}</h1>
-        <h2 class="mb-4">Упс! Что-то пошло не так</h2>
-        <p class="lead text-muted">${reason}</p>
+        <h1 class="display-1 fw-bold text-danger">${status!""}</h1>
 
-        <#if details??>
+        <h2 class="mb-4">Упс! Что-то пошло не так</h2>
+
+        <p class="lead text-muted">${reason!message!"Произошла непредвиденная ошибка на сервере."}</p>
+
+        <#if details?? || path??>
             <div class="card d-inline-block text-start p-3 shadow-sm bg-white mb-4">
                 <ul class="list-unstyled mb-0">
-                    <li><strong>URL:</strong> <code>${details.requestURL!''}</code></li>
+                    <li><strong>URL:</strong> <code>${(details.requestURL)!path!'Неизвестно'}</code></li>
                     <li><strong>Время:</strong> <code>${.now?string('HH:mm:ss')}</code></li>
                 </ul>
             </div>

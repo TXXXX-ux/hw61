@@ -31,13 +31,13 @@
 
             <#if user.accountType == "EMPLOYER">
                 <div class="admin-section mb-4">
-                    <h5 class="fw-bold">Панель работодателя</h5>
+                    <h5 class="fw-bold text-primary">Панель работодателя</h5>
                     <div class="row g-2 mt-2">
                         <div class="col-md-6">
                             <a href="/vacancies" class="btn btn-outline-danger w-100 text-start">Мои вакансии</a>
                         </div>
                         <div class="col-md-6">
-                            <a href="/resumes/create" class="btn btn-info w-100 text-start text-white">Опубликовать резюме</a>
+                            <a href="/vacancies/create" class="btn btn-success w-100 text-start text-white">Опубликовать вакансию</a>
                         </div>
                         <div class="col-md-6">
                             <a href="/resumes" class="btn btn-outline-secondary w-100 text-start">Базовые резюме</a>
@@ -48,9 +48,6 @@
                 <div class="user-section mb-4">
                     <h5 class="fw-bold">Моя карьера</h5>
                     <div class="row g-2 mt-2">
-                        <div class="col-md-6">
-                            <a href="/resumes" class="btn btn-outline-info w-100 text-start">Мои резюме</a>
-                        </div>
                         <div class="col-md-6">
                             <a href="/resumes/create" class="btn btn-info w-100 text-start text-white">Опубликовать резюме</a>
                         </div>
@@ -102,7 +99,7 @@
                     </#if>
 
                 <#else>
-                    <h5 class="fw-bold mb-3">Мои резюме (список)</h5>
+                    <h5 id="my-resumes" class="fw-bold mb-3">Мои резюме (список)</h5>
                     <#if resumesPage?? && resumesPage.content?size gt 0>
                         <div class="list-group mb-3">
                             <#list resumesPage.content as resume>
