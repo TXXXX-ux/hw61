@@ -17,37 +17,27 @@
             <hr>
             <h6 class="text-uppercase text-muted fw-bold">Описание вакансии</h6>
             <p class="mt-3" style="white-space: pre-wrap;">${vacancy.description!"Описание не указано"}</p>
-
             <#if Session?? && Session.SPRING_SECURITY_CONTEXT??>
                 <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
-
-            <#-- Если это РАБОТОДАТЕЛЬ -->
                 <#if auth.authorities?seq_contains("ROLE_EMPLOYER")>
-                    <div class="mt-4 d-flex gap-2 pt-3 border-top">
-                        <a href="/vacancies/${vacancy.id}/edit" class="btn btn-warning">Редактировать</a>
-                        <form action="/vacancies/${vacancy.id}/delete" method="post" onsubmit="return confirm('Точно удалить вакансию?');">
-                            <#if _csrf??>
-                                <input type="hidden" name="${(_csrf.parameterName)!'_csrf'}" value="${(_csrf.token)!''}"/>
-                            </#if>
-                            <button type="submit" class="btn btn-danger">Удалить</button>
-                        </form>
-                        <a href="/vacancies" class="btn btn-outline-secondary">Назад</a>
-                    </div>
-
-                <#-- Если это СОИСКАТЕЛЬ -->
+                    <#if auth.name == vacancy.authorEmail>
+                        <div class="mt-4 d-flex gap-2 pt-3 border-top">
+                            <a href="/vacancies/${vacancy.id}/edit" class="btn btn-warning">Редактировать</a>
+                            <form action="/vacancies/${vacancy.id}/delete" method="post">
+                                <#if _csrf??><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></#if>
+                                <button type="submit" class="btn btn-danger">Удалить</button>
+                            </form>
+                        </div>
+                    <#else>
+                        <div class="mt-4 pt-3 border-top">
+                            <span class="text-muted">Это вакансия другого работодателя</span>
+                        </div>
+                    </#if>
                 <#elseif auth.authorities?seq_contains("ROLE_APPLICANT")>
                     <div class="mt-4 pt-3 border-top">
-                        <button class="btn btn-primary">Откликнуться</button>
-                        <a href="/vacancies" class="btn btn-outline-secondary ms-2">Назад</a>
+                        <button class="btn btn-primary w-100">Откликнуться на вакансию</button>
                     </div>
                 </#if>
-
-            <#-- Если гость НЕ АВТОРИЗОВАН -->
-            <#else>
-                <div class="mt-4 pt-3 border-top">
-                    <a href="/auth/login" class="btn btn-primary">Войдите, чтобы откликнуться</a>
-                    <a href="/vacancies" class="btn btn-outline-secondary ms-2">Назад</a>
-                </div>
             </#if>
 
         </div>

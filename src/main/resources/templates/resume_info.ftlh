@@ -19,11 +19,8 @@
             <h6 class="text-uppercase text-muted fw-bold">Опыт работы и навыки</h6>
             <p class="mt-3" style="white-space: pre-wrap; line-height: 1.6;">${resume.description!"Информация не указана"}</p>
 
-            <#-- УМНЫЙ БЛОК КНОПОК -->
             <#if Session?? && Session.SPRING_SECURITY_CONTEXT??>
                 <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
-
-            <#-- Если это СОИСКАТЕЛЬ (может управлять своим резюме) -->
                 <#if auth.authorities?seq_contains("ROLE_APPLICANT")>
                     <div class="mt-5 pt-4 border-top">
                         <h6 class="fw-bold mb-3 text-info">Управление резюме</h6>
@@ -42,8 +39,6 @@
                             <a href="/auth/profile" class="btn btn-outline-secondary">В профиль</a>
                         </div>
                     </div>
-
-                <#-- Если это РАБОТОДАТЕЛЬ -->
                 <#elseif auth.authorities?seq_contains("ROLE_EMPLOYER")>
                     <div class="mt-5 pt-4 border-top">
                         <button class="btn btn-info text-white btn-lg px-5">Пригласить на собеседование</button>

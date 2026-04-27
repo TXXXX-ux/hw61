@@ -9,8 +9,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
-
-                <#-- Проверяем роль через сессию Spring Security -->
                 <#if Session?? && Session.SPRING_SECURITY_CONTEXT??>
                     <#assign auth = Session.SPRING_SECURITY_CONTEXT.authentication>
                     <#if auth.authorities?seq_contains("ROLE_EMPLOYER")>
