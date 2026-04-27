@@ -1,11 +1,13 @@
 package kg.attractor.lesson55lab.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kg.attractor.lesson55lab.dao.UserDao;
 import kg.attractor.lesson55lab.dto.UserProfileDto;
 import kg.attractor.lesson55lab.dto.UserRegistrationDto;
 import kg.attractor.lesson55lab.model.AccountType;
 import kg.attractor.lesson55lab.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,8 @@ import java.nio.file.StandardCopyOption;
 @RequiredArgsConstructor
 public class UserService {
     private final UserDao userDao;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public void register(UserRegistrationDto dto) {
         User user = User.builder()
@@ -68,6 +72,38 @@ public class UserService {
                 }
             }
             userDao.save(user);
+
         }
+    }
+
+
+    public void updateResetPasswordToken(String token, String email) {
+        User user = userDao.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Пользователь с таким email не найден!");
+        }
+        user.setResetPasswordToken(token);
+        userDao.save(user);
+    }
+
+    public User getByResetPasswordToken(String token) {
+        return userDao.findByResetPasswordToken(token)
+                .orElseThrow(() -> new RuntimeException("Недействительный токен!"));
+    }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        userDao.save(user);
+    }
+
+    public void makeResetPasswdLink(HttpServletRequest request) throws Exception {
+        String email = request.getParameter("email");
+        String token = java.util.UUID.randomUUID().toString();
+        updateResetPasswordToken(token, email);
+
+        // Ссылка будет вести на наш новый контроллер
+        String resetPasswordLink = kg.attractor.lesson55lab.util.Utility.getSiteURL(request) + "/auth/reset_password?token=" + token;
+        emailService.sendEmail(email, resetPasswordLink);
     }
 }
