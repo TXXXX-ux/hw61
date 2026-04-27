@@ -14,5 +14,6 @@ public class VacancyDto {
     private LocalDate publishedDate;
     private Integer responsesCount;
     private String authorName;
+    private String authorEmail;
     private String categoryName;
 }
